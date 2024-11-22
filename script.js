@@ -1,17 +1,12 @@
 const buttonEl = document.getElementById("roll-button");
-
 const diceEl = document.getElementById("dice");
-
 const messageEl = document.getElementById("message");
 
-const guess = parseInt(document.getElementById('guess').value);
-
 function rollDice() {
-  
-  const rollResult = Math.floor(Math.random() * 6) + 1;
+  const rollResult = Math.floor(Math.random() * 6) + 1; 
   const diceFace = getDiceFace(rollResult);
   diceEl.innerHTML = diceFace;
-
+  return rollResult; 
 }
 
 function getDiceFace(rollResult) {
@@ -32,21 +27,28 @@ function getDiceFace(rollResult) {
       return "";
   }
 }
- 
 
 buttonEl.addEventListener("click", () => {
+  const guess = parseInt(document.getElementById("guess").value); 
+
+  if (isNaN(guess) || guess < 1 || guess > 6) {
+    messageEl.innerHTML = "Please enter a valid number between 1 and 6!";
+    messageEl.style.color = "orange";
+    return; 
+  }
+
   diceEl.classList.add("roll-animation");
   setTimeout(() => {
     diceEl.classList.remove("roll-animation");
-    rollDice();
+    const rollResult = rollDice(); 
+
+    if (guess === rollResult) {
+      messageEl.innerHTML = "Correct! You win!";
+      messageEl.style.color = "green";
+    } else {
+      messageEl.innerHTML = `Wrong! The dice showed ${rollResult}. You lost.`;
+      messageEl.style.color = "red";
+    }
   }, 1000);
-
-  if (guess == rollResult) {
-    messageEl.innerHTML = "Correct! You win!";
-    messageEl.style.color = "green";
-  } else {
-    messageEl.innerHTML = `Wrong! The dice showed ${rollResult}. You lost.`;
-    messageEl.style.color = "red";
-  }
-
 });
+
